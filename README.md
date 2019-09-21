@@ -1,4 +1,4 @@
-# mini-projects
+# Flipkart Scraper
 Python code to scrape the price of a single item on www.flipkart.com
 
 Scrape product name and price for a single item and store it in csv format
