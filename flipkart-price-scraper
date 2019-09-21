@@ -1,0 +1,28 @@
+import bs4, requests
+import pandas as pd
+import datetime
+
+# Reading prices of the item from previous runs
+df=pd.read_csv("products.csv")
+
+# Price will be scraped from the url of the item you provide below
+url="https://www.flipkart.com/siemens-sn26l201in-sn256w01gi-free-standing-12-place-settings-dishwasher/p/itmex8gcyunm4csd?pid=DSWEX8GCSJVUHPSH&lid=LSTDSWEX8GCSJVUHPSHFKVIZ1&marketplace=FLIPKART&srno=s_1_9&otracker=AS_Query_OrganicAutoSuggest_2_8_na_na_na&otracker1=AS_Query_OrganicAutoSuggest_2_8_na_na_na&fm=SEARCH&iid=c844f3e7-e716-4c6b-bb42-296a93bdc7b9.DSWEX8GCSJVUHPSH.SEARCH&ppt=sp&ppn=sp&ssid=pbssvhip9s0000001568821666714&qH=2996f34fa72fa5a1"
+
+#Readind data from url
+req=requests.get(url)
+soup = bs4.BeautifulSoup(req.text, "html.parser")
+
+product_name=[]
+price=[]
+
+# Get product name and price
+product_name=soup.find(attrs={'class':'_35KyD6'}).get_text()
+price=soup.find(attrs={'class':'_1vC4OE _3qQ9m1'}).get_text()
+
+#Created data frame, adding current date
+prod_df=pd.DataFrame({'Product_name':product_name, 'Price':price, 'Date':[datetime.date.today()]})
+
+#Store the retrieve data to the file
+df=df.append(prod_df, sort=True)
+print(df)
+df.to_csv('products.csv', index=False, encoding='utf-8')
